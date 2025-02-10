@@ -1,0 +1,18 @@
+# Python-generated files
+**/__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.idea
+*.http
+uv.lock
+
+# Custom
+lyrics
+lyrics.csv
+lyrics.zip

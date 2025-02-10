@@ -1,0 +1,19 @@
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+
+COPY /ai_service /app/ai_service
+COPY pyproject.toml /app/pyproject.toml
+
+WORKDIR /app
+
+RUN uv sync --no-dev --extra lstm
+
+ENV FLASK_APP=ai_service
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV PATH="/app/.venv/bin:$PATH"
+
+RUN python -m ensurepip
+RUN python -m spacy download en_core_web_sm
+
+EXPOSE 5000
+
+CMD ["flask", "run"]

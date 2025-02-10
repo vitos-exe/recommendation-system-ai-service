@@ -1,0 +1,29 @@
+[project]
+name = "ai-service"
+version = "1.0.0"
+readme = "README.md"
+requires-python = ">=3.12.10"
+dependencies = [
+    "flask",
+    "numpy==1.26.4",
+    "pystemmer",
+    "qdrant-client",
+    "spacy",
+    "pandas",
+    "joblib",
+    "scikit-learn",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipdb",
+    "ipython",
+    "pytest",
+    "seaborn",
+    "testfixtures",
+    "jupyterlab",
+]
+lstm = [
+    "gensim",
+    "torch==2.2.2",
+]

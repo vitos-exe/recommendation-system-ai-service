@@ -1,0 +1,38 @@
+name: Python CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@v5
+
+    - name: Install dependencies using uv
+      run: |
+        uv sync
+
+    - name: Install spaCy model
+      run: |
+        .venv/bin/python -m ensurepip
+        .venv/bin/python -m spacy download en_core_web_sm
+
+    - name: Run tests with pytest
+      run: |
+        .venv/bin/pytest
