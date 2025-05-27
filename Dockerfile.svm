@@ -1,32 +1,20 @@
-# Base image
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-# Copy project files
-COPY /ai_service /app/ai_service
-COPY /tests/models /app/models
+COPY /app /app/app
 COPY pyproject.toml /app/pyproject.toml
+COPY wsgi.py /app/wsgi.py
+COPY /tests/models /app/models
 COPY lyrics.zip /app/lyrics.zip
 
-# Set working directory
 WORKDIR /app
 
-# Install project dependencies
 RUN uv sync --no-dev
 
-# Set environment variables
-ENV FLASK_APP=ai_service
-ENV FLASK_RUN_HOST=0.0.0.0
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Additional setup
 RUN python -m ensurepip
 RUN python -m spacy download en_core_web_sm
 
-ENV MODEL_TYPE=TFIDF_SVM
-ENV MODEL_PATH=tests/models
-
-# Expose application port
 EXPOSE 5000
 
-# Command to run the application
-CMD ["flask", "run"]
+CMD ["gunicorn", "--workers", "8", "--bind", "0.0.0.0:5000", "--log-level", "info", "--access-logfile", "-", "wsgi:app"]

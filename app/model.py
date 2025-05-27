@@ -8,10 +8,12 @@ class Prediction:
     relaxed: float
     sad: float
 
+
 @dataclass
 class TrackBase:
     artist: str
     title: str
+
 
 @dataclass
 class PredictionTrack(TrackBase):
@@ -20,7 +22,7 @@ class PredictionTrack(TrackBase):
     @property
     def dict_without_prediction(self) -> dict:
         return {k: v for k, v in asdict(self).items() if k != "prediction"}
-    
+
     @staticmethod
     def get_from_track_and_prediction(
         track: TrackBase, prediction: Prediction

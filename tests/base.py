@@ -2,10 +2,10 @@ from random import random
 
 import pytest
 
-from ai_service import create_app
-from ai_service.config import TestConfig
-from ai_service.lyrics_reader import read_lyrics
-from ai_service.model import PredictionTrack, Prediction, Track
+from app import create_app
+from app.config import TestConfig
+from app.lyrics_reader import read_lyrics
+from app.model import Prediction, PredictionTrack, Track
 
 
 class TestBase:

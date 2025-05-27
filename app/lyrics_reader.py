@@ -5,7 +5,7 @@ import zipfile
 
 from flask import current_app
 
-from ai_service.model import Track
+from app.model import Track
 
 
 def load_lyrics_from_folder(root_folder: str) -> list[Track]:

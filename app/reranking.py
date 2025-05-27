@@ -1,13 +1,16 @@
-from ai_service.model import PredictionTrack, Prediction
+from app.model import Prediction, PredictionTrack
 
-def rerank_lyrics(candidates: list[PredictionTrack], original_prediction: Prediction | None = None) -> list[PredictionTrack]:
+
+def rerank_lyrics(
+    candidates: list[PredictionTrack], original_prediction: Prediction | None = None
+) -> list[PredictionTrack]:
     """
     Reranks a list of candidate lyrics, prioritizing artist diversity
     and including one "exploratory" item.
-    
+
     Args:
         candidates: A list of Lyrics objects to be reranked, assumed to be sorted by initial similarity.
-        original_prediction: The original prediction that led to these candidates. 
+        original_prediction: The original prediction that led to these candidates.
                              (Currently not used for this version of exploration but kept for future enhancements).
 
     Returns:
@@ -16,7 +19,9 @@ def rerank_lyrics(candidates: list[PredictionTrack], original_prediction: Predic
     if not candidates:
         return []
 
-    print(f"Reranking {len(candidates)} candidates. Original prediction: {original_prediction}")
+    print(
+        f"Reranking {len(candidates)} candidates. Original prediction: {original_prediction}"
+    )
 
     # Pass 1: Artist Diversity
     # Items are added to this list if their artist hasn't been seen yet.
@@ -40,24 +45,27 @@ def rerank_lyrics(candidates: list[PredictionTrack], original_prediction: Predic
     if remaining_candidates_after_diversity:
         # Take the least similar item from the *remaining* pool to be the exploratory item.
         # .pop(-1) removes and returns the last item.
-        exploratory_item = remaining_candidates_after_diversity.pop(-1) 
+        exploratory_item = remaining_candidates_after_diversity.pop(-1)
 
     # Combine the lists:
     # 1. Items selected for artist diversity (most similar per artist).
     # 2. The single exploratory item (which was the least similar among the remaining, now promoted).
     # 3. The rest of the candidates (in their original similarity order, minus the exploratory item).
-    
-    final_reranked_list = list(diverse_items_list) # Start with diverse items
+
+    final_reranked_list = list(diverse_items_list)  # Start with diverse items
 
     if exploratory_item:
-        final_reranked_list.append(exploratory_item) # Add the promoted exploratory item
+        final_reranked_list.append(
+            exploratory_item
+        )  # Add the promoted exploratory item
 
     # Add the rest of the remaining candidates (which no longer includes the exploratory_item as it was popped)
     final_reranked_list.extend(remaining_candidates_after_diversity)
-    
+
     # The list construction should inherently avoid duplicates if Lyrics objects are distinct
     # and the logic correctly partitions and reassembles them.
 
-    print(f"Returning {len(final_reranked_list)} reranked candidates after diversity and exploration pass.")
+    print(
+        f"Returning {len(final_reranked_list)} reranked candidates after diversity and exploration pass."
+    )
     return final_reranked_list
-

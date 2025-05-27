@@ -5,7 +5,7 @@ from flask import current_app
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, ScoredPoint, VectorParams
 
-from ai_service.model import PredictionTrack, Prediction
+from app.model import Prediction, PredictionTrack
 
 COLLECTION_NAME: str = "lyrics"
 
@@ -62,12 +62,9 @@ def add_lyrics(lyrics: list[PredictionTrack]) -> None:
     )
 
 
-def search_n_closest(pred: Prediction, n: int = 10, initial_n_candidates: int | None = None) -> list[PredictionTrack]:
+def search_closest(pred: Prediction, n: int = 10) -> list[PredictionTrack]:
     client = get_qdrant_client()
-
-    num_to_fetch = initial_n_candidates if initial_n_candidates is not None else n * 5
-
     points = client.query_points(
-        COLLECTION_NAME, list(astuple(pred)), limit=num_to_fetch, with_vectors=True
+        COLLECTION_NAME, list(astuple(pred)), limit=n, with_vectors=True
     ).points
     return [score_point_to_lyrics(p) for p in points]

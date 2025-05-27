@@ -1,24 +1,22 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-COPY /ai_service /app/ai_service
-COPY /tests/models /app/models
+COPY /app /app/app
 COPY pyproject.toml /app/pyproject.toml
+COPY wsgi.py /app/wsgi.py
+COPY /tests/models /app/models
 COPY lyrics.zip /app/lyrics.zip
 
 WORKDIR /app
 
 RUN uv sync --no-dev --extra lstm
 
-ENV FLASK_APP=ai_service
-ENV FLASK_RUN_HOST=0.0.0.0
 ENV PATH="/app/.venv/bin:$PATH"
+ENV FLASK_MODEL_TYPE=LSTM
 
 RUN python -m ensurepip
 RUN python -m spacy download en_core_web_sm
 
-ENV MODEL_TYPE=TFIDF_SVM
-ENV MODEL_PATH=tests/models
 
 EXPOSE 5000
 
-CMD ["flask", "run"]
+CMD ["gunicorn", "--workers", "8", "--bind", "0.0.0.0:5000", "--log-level", "info", "--access-logfile", "-", "wsgi:app"]

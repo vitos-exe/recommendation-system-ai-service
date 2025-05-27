@@ -11,7 +11,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "ai_service/__init__.py",
+                "FLASK_APP": "app/__init__.py",
                 "FLASK_DEBUG": "1",
                 "FLASK_MODELS_DIR": "/Users/vitalii.chernysh/Library/CloudStorage/GoogleDrive-vivich4omega@gmail.com/My Drive/Навчання/Диплом/models",
                 "FLASK_MODEL_TYPE": "TFIDF_SVM"

@@ -1,6 +1,6 @@
 import pytest
 
-from ai_service.db import COLLECTION_NAME, get_qdrant_client
+from app.db import COLLECTION_NAME, get_qdrant_client
 from tests.base import TestBase
 
 

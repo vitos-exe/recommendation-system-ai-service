@@ -12,6 +12,7 @@ dependencies = [
     "pandas",
     "joblib",
     "scikit-learn",
+    "gunicorn>=23.0.0",
 ]
 
 [project.optional-dependencies]
