@@ -1,8 +1,10 @@
 import os
+from typing import Optional
 
 
 class Config:
     QDRANT_URL: str = os.getenv("QDRANT_URL", "http://localhost:6333")
+    QDRANT_API_KEY: Optional[str] = os.getenv("QDRANT_API_KEY", None)
     LYRICS_FOLDER_STRUCTURE_PATH: str = os.getenv(
         "LYRICS_FOLDER_STRUCTURE_PATH", "lyrics.zip"
     )
