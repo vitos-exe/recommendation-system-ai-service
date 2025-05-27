@@ -13,9 +13,9 @@ class TestBase:
     TEST_LYRICS = PredictionTrack("artist", "title", TEST_PREDICTION)
     TEST_RAW_LYRICS = Track("artist", "title", "lyrics")
 
-    @pytest.fixture(scope="session")
+    @pytest.fixture(scope="function")
     def app(self):
-        app = create_app(TestConfig)
+        app = create_app(TestConfig())
         return app
 
     @pytest.fixture

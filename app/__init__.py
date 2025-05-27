@@ -1,12 +1,12 @@
 import secrets
 from dataclasses import asdict
 
-from flask import Flask, request
+from flask import Flask, request, Response
 
 from app import db, lyrics_reader, ml, model, reranking
+from app.config import Config, DevConfig
 
-
-def create_app(app_config="app.config.DevConfig"):
+def create_app(app_config: Config=DevConfig()):
     app = Flask(__name__)
     app.secret_key = secrets.token_hex()
     app.config.from_object(app_config)
@@ -18,7 +18,12 @@ def create_app(app_config="app.config.DevConfig"):
         app.extensions["qdrant_client"] = db.create_qdrant_client(app.config)
         app.extensions["sentiment_model"] = ml.create_model(app.config)
 
-    @app.cli.command("populate_db")
+
+    @app.get("/health")
+    def health_check():
+        return {"status": "healthy"}, 200
+
+    @app.get("/populate_db")
     def populate_db():
         sentiment_model = ml.get_sentiment_model()
         raw_lyrics = lyrics_reader.read_lyrics()
@@ -28,10 +33,7 @@ def create_app(app_config="app.config.DevConfig"):
             for rl, p in zip(raw_lyrics, predictions)
         ]
         db.add_lyrics(lyrics)
-
-    @app.get("/health")
-    def health_check():
-        return {"status": "healthy"}, 200
+        return Response(status=204)
 
     @app.post("/predict")
     def get_predictions():

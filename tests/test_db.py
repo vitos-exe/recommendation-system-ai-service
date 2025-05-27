@@ -13,8 +13,8 @@ class TestDB(TestDBBase):
     def round_to_five(f):
         return round(f, 5)
 
-    def test_add_lyrics(self, app, db_client):  # Add app fixture
-        with app.app_context():  # Add app context
+    def test_add_lyrics(self, app, db_client):
+        with app.app_context():
             add_lyrics([TestBase.TEST_LYRICS])
             records = db_client.scroll(
                 collection_name=COLLECTION_NAME, with_vectors=True
