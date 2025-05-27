@@ -1,4 +1,4 @@
-from ai_service.model import combine_raw_lyrics_and_prediction
+from ai_service.model import PredictionTrack
 from tests.base import TestBase
 
 
@@ -12,7 +12,7 @@ class TestModel(TestBase):
         )
 
     def test_combine_raw_lyrics_and_prediction(self):
-        lyrics = combine_raw_lyrics_and_prediction(
+        lyrics = PredictionTrack.get_from_track_and_prediction(
             TestBase.TEST_RAW_LYRICS, TestBase.TEST_PREDICTION
         )
         assert hash(lyrics) == hash(TestBase.TEST_LYRICS)

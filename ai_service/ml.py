@@ -5,13 +5,13 @@ import joblib
 import numpy as np
 from flask import current_app
 
-from ai_service.model import Prediction, RawLyrics
+from ai_service.model import Prediction, Track
 from ai_service.preprocessing_utils import preprocess
 
 
 class SentimentModel(ABC):
     @abstractmethod
-    def predict_lyrics(self, lyrics: list[RawLyrics]) -> list[Prediction]:
+    def predict_lyrics(self, lyrics: list[Track]) -> list[Prediction]:
         pass
 
 
@@ -66,7 +66,7 @@ class SentimentLSTM(SentimentModel):
             return np.zeros((max_len, vector_size))
         return np.array(vectors)
 
-    def predict_lyrics(self, lyrics: list[RawLyrics]) -> list[Prediction]:
+    def predict_lyrics(self, lyrics: list[Track]) -> list[Prediction]:
         import torch
         embeddings = np.array([self.get_sentence_embedding(lr.lyrics) for lr in lyrics])
         X = torch.from_numpy(embeddings).float()
@@ -88,7 +88,7 @@ class SentimentTfidfSvm(SentimentModel):
         with open(svm_path, "rb") as f:
             self.svm_classifier = joblib.load(f)
 
-    def predict_lyrics(self, lyrics: list[RawLyrics]) -> list[Prediction]:
+    def predict_lyrics(self, lyrics: list[Track]) -> list[Prediction]:
         lyrics_text = [" ".join(preprocess(lr.lyrics)) for lr in lyrics]
         lyrics_tfidf = self.tfidf_vectorizer.transform(lyrics_text).toarray()
 

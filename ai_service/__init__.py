@@ -25,7 +25,7 @@ def create_app(app_config="ai_service.config.DevConfig"):
         raw_lyrics = lyrics_reader.read_lyrics()
         predictions = sentiment_model.predict_lyrics(raw_lyrics)
         lyrics = [
-            model.combine_raw_lyrics_and_prediction(rl, p)
+            model.PredictionTrack.get_from_track_and_prediction(rl, p)
             for rl, p in zip(raw_lyrics, predictions)
         ]
         db.add_lyrics(lyrics)
@@ -38,11 +38,11 @@ def create_app(app_config="ai_service.config.DevConfig"):
     def get_prediction():
         sentiment_model = ml.get_sentiment_model()
         save = request.args.get("save")
-        raw_lyrics = model.RawLyrics(**request.get_json())
+        raw_lyrics = model.Track(**request.get_json())
         prediction = sentiment_model.predict_lyrics([raw_lyrics])[0]
         if save:
             db.add_lyrics(
-                [model.combine_raw_lyrics_and_prediction(raw_lyrics, prediction)]
+                [model.PredictionTrack.get_from_track_and_prediction(raw_lyrics, prediction)]
             )
         return asdict(prediction), 200
 
@@ -50,12 +50,12 @@ def create_app(app_config="ai_service.config.DevConfig"):
     def get_predictions():
         sentiment_model = ml.get_sentiment_model()
         save = request.args.get("save")
-        lyrics = [model.RawLyrics(**obj) for obj in request.get_json()]
+        lyrics = [model.Track(**obj) for obj in request.get_json()]
         preds = sentiment_model.predict_lyrics(lyrics)
         if save:
             db.add_lyrics(
                 [
-                    model.combine_raw_lyrics_and_prediction(lyr, pred)
+                    model.PredictionTrack.get_from_track_and_prediction(lyr, pred)
                     for lyr, pred in zip(lyrics, preds)
                 ]
             )

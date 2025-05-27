@@ -5,11 +5,11 @@ import zipfile
 
 from flask import current_app
 
-from ai_service.model import RawLyrics
+from ai_service.model import Track
 
 
-def load_lyrics_from_folder(root_folder: str) -> list[RawLyrics]:
-    raw_lyrics_list: list[RawLyrics] = []
+def load_lyrics_from_folder(root_folder: str) -> list[Track]:
+    raw_lyrics_list: list[Track] = []
     for label in os.listdir(root_folder):
         label_dir = os.path.join(root_folder, label)
         if not os.path.isdir(label_dir):
@@ -20,11 +20,11 @@ def load_lyrics_from_folder(root_folder: str) -> list[RawLyrics]:
                 filepath = os.path.join(label_dir, filename)
                 with open(filepath, "r", encoding="utf-8") as f:
                     lyrics = f.read()
-                raw_lyrics_list.append(RawLyrics(artist, title, lyrics))
+                raw_lyrics_list.append(Track(artist, title, lyrics))
     return raw_lyrics_list
 
 
-def read_lyrics() -> list[RawLyrics]:
+def read_lyrics() -> list[Track]:
     path = current_app.config["LYRICS_FOLDER_STRUCTURE_PATH"]
     if isinstance(path, str) and path.lower().endswith(".zip"):
         tmpdir = tempfile.mkdtemp()
@@ -41,6 +41,6 @@ def read_lyrics() -> list[RawLyrics]:
     return raw
 
 
-def lyrics_by_artist(artist: str) -> RawLyrics:
+def lyrics_by_artist(artist: str) -> Track:
     raw = read_lyrics()
     return next(filter(lambda rl: rl.artist == artist, raw))

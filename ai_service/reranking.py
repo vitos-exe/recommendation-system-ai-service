@@ -1,6 +1,6 @@
-from ai_service.model import Lyrics, Prediction
+from ai_service.model import PredictionTrack, Prediction
 
-def rerank_lyrics(candidates: list[Lyrics], original_prediction: Prediction | None = None) -> list[Lyrics]:
+def rerank_lyrics(candidates: list[PredictionTrack], original_prediction: Prediction | None = None) -> list[PredictionTrack]:
     """
     Reranks a list of candidate lyrics, prioritizing artist diversity
     and including one "exploratory" item.

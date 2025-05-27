@@ -1,7 +1,9 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
 COPY /ai_service /app/ai_service
+COPY /tests/models /app/models
 COPY pyproject.toml /app/pyproject.toml
+COPY lyrics.zip /app/lyrics.zip
 
 WORKDIR /app
 
@@ -13,6 +15,9 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 RUN python -m ensurepip
 RUN python -m spacy download en_core_web_sm
+
+ENV MODEL_TYPE=TFIDF_SVM
+ENV MODEL_PATH=tests/models
 
 EXPOSE 5000
 

@@ -1,6 +1,6 @@
 import pytest
 
-from ai_service.model import Lyrics, Prediction
+from ai_service.model import PredictionTrack, Prediction
 from ai_service.reranking import rerank_lyrics
 
 # Sample prediction for use in tests
@@ -10,17 +10,17 @@ def test_rerank_empty_and_single_candidates():
     """Tests reranking with empty or single candidate lists."""
     assert rerank_lyrics([]) == []
     
-    single_candidate = [Lyrics("Artist A", "Title 1", PRED)]
+    single_candidate = [PredictionTrack("Artist A", "Title 1", PRED)]
     assert rerank_lyrics(single_candidate, PRED) == single_candidate
 
 def test_rerank_main_diversity_and_exploration_scenario():
     """Tests the primary logic for artist diversity and guided exploration."""
     candidates = [
-        Lyrics("Artist A", "A_Song1_Sim0.9", PRED),  # Most similar by Artist A
-        Lyrics("Artist B", "B_Song1_Sim0.8", PRED),  # Most similar by Artist B
-        Lyrics("Artist A", "A_Song2_Sim0.7", PRED),  # Second by Artist A
-        Lyrics("Artist C", "C_Song1_Sim0.6", PRED),  # Most similar by Artist C
-        Lyrics("Artist B", "B_Song2_Sim0.5", PRED),  # Second by Artist B
+        PredictionTrack("Artist A", "A_Song1_Sim0.9", PRED),  # Most similar by Artist A
+        PredictionTrack("Artist B", "B_Song1_Sim0.8", PRED),  # Most similar by Artist B
+        PredictionTrack("Artist A", "A_Song2_Sim0.7", PRED),  # Second by Artist A
+        PredictionTrack("Artist C", "C_Song1_Sim0.6", PRED),  # Most similar by Artist C
+        PredictionTrack("Artist B", "B_Song2_Sim0.5", PRED),  # Second by Artist B
     ]
     
     # Expected order after reranking:

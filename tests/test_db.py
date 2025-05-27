@@ -3,7 +3,7 @@ from dataclasses import astuple
 from testfixtures import compare
 
 from ai_service.db import COLLECTION_NAME, add_lyrics, search_n_closest
-from ai_service.model import Lyrics, Prediction
+from ai_service.model import PredictionTrack, Prediction
 from tests.base import TestBase
 from tests.db_base import TestDBBase
 
@@ -45,7 +45,7 @@ class TestDB(TestDBBase):
                 "Melancholy Pop",
             ]
             lyrics = [
-                Lyrics("artist", t, Prediction(*p)) for t, p in zip(titles, preds)
+                PredictionTrack("artist", t, Prediction(*p)) for t, p in zip(titles, preds)
             ]
             add_lyrics(lyrics)
             closest = search_n_closest(Prediction(0.6, 0.15, 0.2, 0.05), n=3, initial_n_candidates=3)

@@ -5,7 +5,7 @@ from flask import current_app
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, ScoredPoint, VectorParams
 
-from ai_service.model import Lyrics, Prediction
+from ai_service.model import PredictionTrack, Prediction
 
 COLLECTION_NAME: str = "lyrics"
 
@@ -16,7 +16,7 @@ class QdrantClientNotInitializedError(Exception):
     pass
 
 
-def lyrics_to_point_struct(lyrics: Lyrics) -> PointStruct:
+def lyrics_to_point_struct(lyrics: PredictionTrack) -> PointStruct:
     return PointStruct(
         id=str(uuid.uuid4()),
         vector=astuple(lyrics.prediction),
@@ -24,9 +24,9 @@ def lyrics_to_point_struct(lyrics: Lyrics) -> PointStruct:
     )
 
 
-def score_point_to_lyrics(point: ScoredPoint) -> Lyrics:
+def score_point_to_lyrics(point: ScoredPoint) -> PredictionTrack:
     pred = Prediction(*point.vector)
-    return Lyrics(prediction=pred, **point.payload)
+    return PredictionTrack(prediction=pred, **point.payload)
 
 
 def create_qdrant_client(config) -> QdrantClient:
@@ -54,7 +54,7 @@ def get_qdrant_client() -> QdrantClient:
     return client
 
 
-def add_lyrics(lyrics: list[Lyrics]) -> None:
+def add_lyrics(lyrics: list[PredictionTrack]) -> None:
     client = get_qdrant_client()
     client.upsert(
         collection_name=COLLECTION_NAME,
@@ -62,7 +62,7 @@ def add_lyrics(lyrics: list[Lyrics]) -> None:
     )
 
 
-def search_n_closest(pred: Prediction, n: int = 10, initial_n_candidates: int | None = None) -> list[Lyrics]:
+def search_n_closest(pred: Prediction, n: int = 10, initial_n_candidates: int | None = None) -> list[PredictionTrack]:
     client = get_qdrant_client()
 
     num_to_fetch = initial_n_candidates if initial_n_candidates is not None else n * 5

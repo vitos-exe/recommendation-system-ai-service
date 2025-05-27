@@ -1,35 +1,37 @@
 from dataclasses import asdict, dataclass
 
 
-@dataclass(frozen=True)
+@dataclass
 class Prediction:
     angry: float
     happy: float
     relaxed: float
     sad: float
 
-
-@dataclass(frozen=True)
-class Lyrics:
+@dataclass
+class TrackBase:
     artist: str
     title: str
+
+@dataclass
+class PredictionTrack(TrackBase):
     prediction: Prediction
 
     @property
     def dict_without_prediction(self) -> dict:
         return {k: v for k, v in asdict(self).items() if k != "prediction"}
+    
+    @staticmethod
+    def get_from_track_and_prediction(
+        track: TrackBase, prediction: Prediction
+    ) -> "PredictionTrack":
+        return PredictionTrack(
+            artist=track.artist,
+            title=track.title,
+            prediction=prediction,
+        )
 
 
-@dataclass(frozen=True)
-class RawLyrics:
-    artist: str
-    title: str
+@dataclass
+class Track(TrackBase):
     lyrics: str
-
-
-def combine_raw_lyrics_and_prediction(
-    raw_lyrics: RawLyrics, prediction: Prediction
-) -> Lyrics:
-    return Lyrics(
-        artist=raw_lyrics.artist, title=raw_lyrics.title, prediction=prediction
-    )
