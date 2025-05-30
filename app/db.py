@@ -32,7 +32,7 @@ def score_point_to_lyrics(point: ScoredPoint) -> PredictionTrack:
 def create_qdrant_client(config) -> QdrantClient:
     url = config.get("QDRANT_URL")
     api_key = config.get("QDRANT_API_KEY")
-    client = QdrantClient(url=url, api_key=api_key)
+    client = QdrantClient(location=url, api_key=api_key)
     setup_qdrant(client)
     return client
 
