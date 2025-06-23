@@ -35,7 +35,7 @@ def create_app(app_config: Config=DevConfig()):
         db.add_lyrics(lyrics)
         return Response(status=204)
 
-    @app.post("/predict")
+    @app.post("/prediction")
     def get_predictions():
         sentiment_model = ml.get_sentiment_model()
         save = request.args.get("save")
@@ -49,7 +49,7 @@ def create_app(app_config: Config=DevConfig()):
             db.add_lyrics(tracks)
         return [asdict(p) for p in preds], 200
 
-    @app.post("/get-closest")
+    @app.post("/closest")
     def get_closest():
         pred = model.Prediction(**request.get_json())
         n = request.args.get("n", default=1, type=int)
