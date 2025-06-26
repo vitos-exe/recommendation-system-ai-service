@@ -8,7 +8,7 @@ COPY lyrics.zip /app/lyrics.zip
 
 WORKDIR /app
 
-RUN uv sync --no-dev
+RUN uv sync --locked --no-cache --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
 

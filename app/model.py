@@ -24,7 +24,7 @@ class PredictionTrack(TrackBase):
         return {k: v for k, v in asdict(self).items() if k != "prediction"}
 
     @staticmethod
-    def get_from_track_and_prediction(
+    def from_track_and_prediction(
         track: TrackBase, prediction: Prediction
     ) -> "PredictionTrack":
         return PredictionTrack(

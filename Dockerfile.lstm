@@ -8,7 +8,7 @@ COPY lyrics.zip /app/lyrics.zip
 
 WORKDIR /app
 
-RUN uv sync --no-dev --extra lstm
+RUN uv sync --locked --no-cache --no-dev --extra lstm
 
 ENV PATH="/app/.venv/bin:$PATH"
 ENV FLASK_MODEL_TYPE=LSTM

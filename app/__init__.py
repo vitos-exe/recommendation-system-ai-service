@@ -29,7 +29,7 @@ def create_app(app_config: Config=DevConfig()):
         raw_lyrics = lyrics_reader.read_lyrics()
         predictions = sentiment_model.predict_lyrics(raw_lyrics)
         lyrics = [
-            model.PredictionTrack.get_from_track_and_prediction(rl, p)
+            model.PredictionTrack.from_track_and_prediction(rl, p)
             for rl, p in zip(raw_lyrics, predictions)
         ]
         db.add_lyrics(lyrics)
@@ -43,7 +43,7 @@ def create_app(app_config: Config=DevConfig()):
         preds = sentiment_model.predict_lyrics(lyrics)
         if save:
             tracks = [
-                model.PredictionTrack.get_from_track_and_prediction(lyr, pred)
+                model.PredictionTrack.from_track_and_prediction(lyr, pred)
                 for lyr, pred in zip(lyrics, preds)
             ]
             db.add_lyrics(tracks)

@@ -15,7 +15,7 @@ class TestModel(TestBase):
         )
 
     def test_combine_raw_lyrics_and_prediction(self):
-        lyrics = PredictionTrack.get_from_track_and_prediction(
+        lyrics = PredictionTrack.from_track_and_prediction(
             TestBase.TEST_RAW_LYRICS, TestBase.TEST_PREDICTION
         )
         assert dumps(asdict(lyrics)) == dumps(asdict(TestBase.TEST_LYRICS))
