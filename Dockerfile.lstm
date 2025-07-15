@@ -2,6 +2,7 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
 COPY /app /app/app
 COPY pyproject.toml /app/pyproject.toml
+COPY uv.lock /app/uv.lock
 COPY wsgi.py /app/wsgi.py
 COPY /tests/models /app/models
 COPY lyrics.zip /app/lyrics.zip

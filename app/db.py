@@ -12,7 +12,6 @@ COLLECTION_NAME: str = "lyrics"
 
 class QdrantClientNotInitializedError(Exception):
     """Custom exception for when QdrantClient is accessed before initialization."""
-
     pass
 
 
